@@ -13,18 +13,16 @@ const $searchForm = $("#searchForm");
  */
 
 async function getShowsByTerm(term) {
-  // ADD: Remove placeholder & make request to TVMaze search shows API.
-
   const queryParams = {
     "q": term
   }
-  // const query = new URLSearchParams(queryParams);
   const params = new URLSearchParams(queryParams);
   console.log(queryParams);
   console.log(params);
 
   const response = await fetch(`https://api.tvmaze.com/search/shows?${params}`);
   const responseJSON = await response.json();
+
   const id = responseJSON[0].show.id;
   const name = responseJSON[0].show.name;
   const summary = responseJSON[0].show.summary;
@@ -36,8 +34,7 @@ async function getShowsByTerm(term) {
 
   return series;
 
-
-
+  // This is an example of the expected subset of the response object.
   /*
   return [
     {
@@ -70,9 +67,10 @@ async function getShowsByTerm(term) {
 function displayShows(shows) {
   $showsList.empty();
 
-
-
   for (const show of shows) {
+    if (show.image === undefined) {
+      show.image = "https://tinyurl.com/tv-missing";
+    }
     const $show = $(`
         <div data-show-id="${show.id}" class="Show col-md-12 col-lg-6 mb-4">
          <div class="media">
