@@ -24,7 +24,15 @@ async function getShowsByTerm(term) {
   console.log(params);
 
   const response = await fetch(`https://api.tvmaze.com/search/shows?${params}`);
+  const responseJSON = await response.json();
+  const id = responseJSON[0].show.id;
+  const name = responseJSON[0].show.name;
+  const summary = responseJSON[0].show.summary;
+  const image = responseJSON[0].show.image.medium;
   console.log(response);
+
+  const series = [{id,name,summary,image}];
+  console.log("series",series);
 
 
 
