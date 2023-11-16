@@ -81,7 +81,7 @@ function displayShows(shows) {
            <div class="media-body">
              <h5 class="text-primary">${show.name}</h5>
              <div><small>${show.summary}</small></div>
-             <button class="btn btn-outline-light btn-sm Show-getEpisodes">
+             <button id="btn-${show.id}" class="btn btn-outline-light btn-sm Show-getEpisodes">
                Episodes
              </button>
            </div>
@@ -89,14 +89,17 @@ function displayShows(shows) {
        </div>
       `);
 
-      $(`${show.id} button`).on('click',getEpisodesOfShow(show.id));
 
     $showsList.append($show);
+    $(`#btn-${show.id}`).on('click',displayEpisodes);
   }
   console.log('displayShows',displayShows);
 }
 
-
+function sayHi() {
+  console.log('Congratulations on clicking a button.');
+  return 'You clicked something.';
+}
 
 
 /** Handle search form submission: get shows from API and display.
@@ -125,24 +128,30 @@ $searchForm.on("submit", async function handleSearchForm (evt) {
 
 async function getEpisodesOfShow(id) {
 
-  const episodeResponse = await fetch(TVMAZE_URL+"/shows/"+id+"/episodes");
+  const episodeResponse = await fetch(TVMAZE_URL+"shows/"+id+"/episodes");
   const episodeData = await episodeResponse.json();
 
   //id, name, season number
 
-  const tvShow = {
-    "id": episodeData.id,
-    "name": episodeData.name,
-    "season": episodeData.season,
-    "number": episodeData.number
-  }
+  let tvShow = [];
+  for (let show of episodeData) {
+    tvShow.push ({
+      "id": show.id,
+      "name": show.name,
+      "season": show.season,
+      "number": show.number
+      })
+    }
   console.log('getEpisodesOfShow',getEpisodesOfShow);
   return tvShow;
 }
 
 /** Write a clear docstring for this function... */
 
-function displayEpisodes(episodes) { }
+function displayEpisodes(episodes) {
+
+}
+
 
 
 $('episodesList').on('click',getEpisodesOfShow);
