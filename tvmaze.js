@@ -23,13 +23,16 @@ async function getShowsByTerm(term) {
   const response = await fetch(`https://api.tvmaze.com/search/shows?${params}`);
   const responseJSON = await response.json();
 
-  const id = responseJSON[0].show.id;
-  const name = responseJSON[0].show.name;
-  const summary = responseJSON[0].show.summary;
-  const image = responseJSON[0].show.image.medium;
-  console.log(response);
-
-  const series = [{id,name,summary,image}];
+  let series = [];
+  for (let i = 0; i < responseJSON.length; i++) {
+    const id = responseJSON[i].show.id;
+    const name = responseJSON[i].show.name;
+    const summary = responseJSON[i].show.summary;
+    const image = !responseJSON[i].show.image ?
+        "https://tinyurl.com/tv-missing" :
+        responseJSON[i].show.image.medium;
+    series.push({id,name,summary,image});
+  }
   console.log("series",series);
 
   return series;
@@ -55,7 +58,6 @@ async function getShowsByTerm(term) {
     }
   ]
   */
-
 }
 
 
@@ -68,9 +70,6 @@ function displayShows(shows) {
   $showsList.empty();
 
   for (const show of shows) {
-    if (show.image === undefined) {
-      show.image = "https://tinyurl.com/tv-missing";
-    }
     const $show = $(`
         <div data-show-id="${show.id}" class="Show col-md-12 col-lg-6 mb-4">
          <div class="media">
