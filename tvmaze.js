@@ -4,6 +4,8 @@ const $showsList = $("#showsList");
 const $episodesArea = $("#episodesArea");
 const $searchForm = $("#searchForm");
 
+const IMAGE_PLACEHOLDER = "https://tinyurl.com/tv-missing";
+const TVMAZE_URL = "https://api.tvmaze.com/";   // search/shows?"
 
 /** Given a search term, search for tv shows that match that query.
  *
@@ -20,18 +22,17 @@ async function getShowsByTerm(term) {
   console.log(queryParams);
   console.log(params);
 
-  const response = await fetch(`https://api.tvmaze.com/search/shows?${params}`);
-  const responseJSON = await response.json();
+  const response = await fetch(TVMAZE_URL+`search/shows?${params}`);
+  const showsData = await response.json();
 
   let series = [];
-  for (let i = 0; i < responseJSON.length; i++) {
-    const id = responseJSON[i].show.id;
-    const name = responseJSON[i].show.name;
-    const summary = responseJSON[i].show.summary;
-    const image = !responseJSON[i].show.image ?
-        "https://tinyurl.com/tv-missing" :
-        responseJSON[i].show.image.medium;
-    series.push({id,name,summary,image});
+  for (let tvShow of showsData) {
+    series.push({
+      id: tvShow.show.id,
+      name: tvShow.show.name,
+      summary: tvShow.show.summary,
+      image: !tvShow.show.image ? IMAGE_PLACEHOLDER : tvShow.show.image.medium
+    });
   }
   console.log("series",series);
 
