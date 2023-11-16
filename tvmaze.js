@@ -89,10 +89,14 @@ function displayShows(shows) {
        </div>
       `);
 
+      $(`${show.id} button`).on('click',getEpisodesOfShow(show.id));
+
     $showsList.append($show);
   }
   console.log('displayShows',displayShows);
 }
+
+
 
 
 /** Handle search form submission: get shows from API and display.
@@ -116,11 +120,31 @@ $searchForm.on("submit", async function handleSearchForm (evt) {
 /** Given a show ID, get from API and return (promise) array of episodes:
  *      { id, name, season, number }
  */
+// input: id of the show
+//
 
-// async function getEpisodesOfShow(id) { }
+async function getEpisodesOfShow(id) {
+
+  const episodeResponse = await fetch(TVMAZE_URL+"/shows/"+id+"/episodes");
+  const episodeData = await episodeResponse.json();
+
+  //id, name, season number
+
+  const tvShow = {
+    "id": episodeData.id,
+    "name": episodeData.name,
+    "season": episodeData.season,
+    "number": episodeData.number
+  }
+  console.log('getEpisodesOfShow',getEpisodesOfShow);
+  return tvShow;
+}
 
 /** Write a clear docstring for this function... */
 
-// function displayEpisodes(episodes) { }
+function displayEpisodes(episodes) { }
+
+
+$('episodesList').on('click',getEpisodesOfShow);
 
 // add other functions that will be useful / match our structure & design
